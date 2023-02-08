@@ -5,3 +5,6 @@
 	path = oresat-star-tracker-software
 	url = https://github.com/aakarsh/oresat-star-tracker-software
 	branch = aakarsh/15-oresat-app-dev-olaf-v1
+[submodule "oresat-startracker-calibration-test"]
+	path = oresat-startracker-calibration-test
+	url = https://github.com/aakarsh/oresat-startracker-calibration-test.git
