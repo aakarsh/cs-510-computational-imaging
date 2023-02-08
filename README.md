@@ -1,1 +1,1 @@
-# cs-510-computational-imaging
+# CS-510-COMPUTATIONAL-IMAGING

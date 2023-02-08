@@ -4,4 +4,4 @@
 [submodule "oresat-star-tracker-software"]
 	path = oresat-star-tracker-software
 	url = https://github.com/aakarsh/oresat-star-tracker-software
-	branch = 15-oresat-app-dev-olaf-v1
+	branch = aakarsh/15-oresat-app-dev-olaf-v1
