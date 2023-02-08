@@ -1,0 +1,126 @@
+\documentclass[]{article}
+\usepackage{graphicx}
+
+\usepackage{graphicx}
+\usepackage{stix}
+\usepackage{enumerate}
+
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{amsthm}
+\usepackage{placeins}
+
+\usepackage{listings}
+\usepackage{titlesec}
+\usepackage{fullpage}
+\usepackage{amsmath,amsthm,amsfonts}
+\usepackage{enumerate}
+\usepackage{algorithm,algorithmic}
+\usepackage{xcolor}
+\usepackage{bbm}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{placeins}
+\usepackage{rotating}
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage{lipsum}
+\usepackage{graphicx}
+\usepackage{csvsimple,booktabs,siunitx}
+
+\usepackage{rotating}
+\usepackage{biblatex}
+\addbibresource{references.bib} 
+\graphicspath{ {../../output/} }
+\usepackage{caption}
+
+\graphicspath{ {../../output/} }
+
+\title{Testing and Characterizing of the  Star Tracker for Oresat Cube Satellite} 
+
+\author{Aakarsh Nair \\ aakarsh@pdx.edu}
+\bibliography{references.bib}
+
+\begin{document}
+	\maketitle
+	
+	\abstract{ The goal of this project is to increase understanding of the star tracker component of OreSat project by documenting it, providing optimal values for its parameters, looking for possible corrections for speed of movement, and providing  basic benchmarks}
+	
+	\section{Problem Statement}
+	
+	\subsection{Introduction}
+	
+	Oresat0 \cite{Oresat0} was the first student built satellite at Portland State 
+	University by he Portland State Aerospace Society. 
+	
+	It was launched from Seattle, Washington, aboard the Astra LV0009 
+	in a sun-synchronous low earth orbit \cite{Oresat0Orbit}. It flies at an altitude of roughly $500$ km at a velocity of roughly $8$ km/sec \cite{Oresat0Orbit2}. OreSat 0.5 is a 2U version of 
+	OreSat0 cube sattelite is tentatively going to launch in Q1 of 2023. 
+	
+	Both satellites were designed to be modular. They consist of a series of hot swappable,  Linux on box on a chip, cards.  Each card is built around on 
+	the OSD335x-SM System-in-Package offered by Texas instruments \cite{Octavio-OSD335x},  and contains a ARM Cortex-A8 processor. They also contain with firmware programmable programmable real time units 
+	which are small processors tightly integrated  with the I/O subsystem and 
+	for low-latency I/O processing \cite{PRU-Details}.
+	
+	In addition to these the imaging hardware of the star tracker card consists of an  AR0130CS \cite{AR0130CS}, 1/3 inch CMOS digital image sensor of 
+	size 1280H x 960v which can capture images at up to 45 fps with 
+	a dynamic range of 82 db \cite{PSAS_Star_Tracker_Hardware}.
+	
+	OreSat0.5 is designed to include an Attitude Determining and Control System (ADCS) designed to provide stability and pointing capabilities to the cube satellite.
+	
+	As a functional component of the ADCS the Star Tracker is required to provide updates to its subscribers of the relative orientation of the satellite, in terms of RA (right ascension), DEC (declination), and ORI (orientation), with respect to the earth. 
+	
+	This is achieved by performing some image pre-processing steps and utilizing the open star tracker \cite{OpenStarTracker} in order to solve from image of stars in the camera's field of view to the satellite's relative orientation.
+	
+	Internally open start tracker uses the data from Hipparcos\cite{Hipparchos} mission which collected and cataloged precise measurements of 118,200 stars including the brightness, relative positions and motions.  This catalog is indexed and made query-able by the Open Star Tracker using the relative brightness and positioning of the stars to search for matches in the catalog.
+	
+	The goal of this project is to increase understanding of the star tracker component of OreSat project by documenting it, providing optimal values for its parameters, looking for possible corrections for speed of movement of the Satellite, and providing  basic benchmarks scripts and utilities to understand  and evaluate the trackers performance. The hope is that these steps may be good to understand and possibly increase the reliability of the star tracker.
+	
+	\section{Proposed Deliverables}
+	
+	\subsection{Document Open Star Tracker Algorithm and its internal data structures}
+	
+	Current implementation of the star tracker is under documented
+	a lacks sufficient framework for testing. The task here would be to generate better documentation for the algorithm functioning as well as any additional benchmark or unit tests required.
+	
+	There is also the possibility to prototype key parts of the algorithm in pure python notebook for understanding. Read and summarize background material on blind calibration used by astrometry.net \cite{Astrometry.net} for comparison.   
+	Perform, simulate or otherwise justify the expected star tracker camera view based on velocity, elevation or using some star simulation software. 
+	
+	\subsection{Describe sensitivity of solver parameters on the Pine Mountain Data Set}
+	
+	Pine mountain dataset consists a series of the images taken at pine mountain at various exposure settings. The task here would be to 
+	characterize the solver on this dataset. Including exposure time dependence. Solving in the presence of motion blur when exposure times are high as well as speed and accuracy of the solver. Use data augmentation techniques to increase the  dataset size and noise sensitivity. Write some benchmarks using these datasets. If weather conditions permit we can also consider gathering additional data from other sites.
+	
+	\subsection{Study and propose optimal values for exposure time and other settings with rationale for choice.}
+	
+	Provide a rationale for the optimal values and describe the trade offs using performance common detector metrics such as ROC and precision 
+	recall curves.  Include these metrics as output of an automated benchmark script so these can be evaluated at different parameter values.
+	
+	\subsection{Evaluate feasibility of motion blur removal} 
+	
+	Evaluate the feasibility and of motion blur removal. Evaluate the trade-off in solver performance in the presence of degrees of motion blur vs the exposure time and gain.  Investigate speed and performance of techniques of motion blur
+	removal.
+	
+	Some techniques to consider maybe using the Wiener filter to remove motion blur\cite{OpenCVMotionDeblurWeiner}. Read more about Coded Exposure Photography to judge its applicability \cite{CodedExposureMotionBlur}.
+	
+	If possible while solving consider how prior satellite images or solving information maybe used to increase solving accuracy under uncertainty.  this might involve looking into Bayesian methods.
+	
+	\subsection{Literature Review}
+	
+	Read further literature on star tracking. This may include looking into the original papers on STAR-ND and Pyramid methods and as well as review other techniques such as feature based or neural network based methods star tracking. If possible give an account of what they would look like. If we are able to finish writing a bench mark then consider implementing one of them  and comparing it against Open Start Tracker. 
+	
+	\section{Discussion}
+	
+	We expect to at a minimum be able to accurately describe the solver and be able to test out the solver characteristics to perturbations of the images, these should help us increase confidence in the solver.
+	
+	We hope that we can also optimize camera parameters or make argument for their current values in tandem once we can test the solver on various data augmented tasks. 
+	
+	We might be able to gather more data by making additional observations weather and place permitting. Motion blur removal and other solving and capture problems are stretch goals based on our observations. 
+	
+	Final stretch goal maybe to either rewrite the star tracker as pure python based implementation,  or to compare it with some other reference implementation. 
+	
+	\printbibliography{}
+	
+\end{document}
